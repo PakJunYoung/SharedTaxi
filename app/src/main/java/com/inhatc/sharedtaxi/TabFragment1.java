@@ -3,6 +3,7 @@ package com.inhatc.sharedtaxi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,6 +15,11 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
 
 public class TabFragment1 extends Fragment implements View.OnClickListener{
 
@@ -21,7 +27,7 @@ public class TabFragment1 extends Fragment implements View.OnClickListener{
     private Animation fab_open, fab_close;
     private boolean isFabOpen = false;
     public static TabFragment1 mContext;
-
+    DatabaseReference db;
     private ListView mListView;
 
     @Override
@@ -87,6 +93,7 @@ public class TabFragment1 extends Fragment implements View.OnClickListener{
                         .setPositiveButton( "만들기", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+
                                 Toast.makeText( getActivity(), items[selectedItem[0]], Toast.LENGTH_LONG ).show();
                             }
                         } ).setNegativeButton( "취소", new DialogInterface.OnClickListener() {
