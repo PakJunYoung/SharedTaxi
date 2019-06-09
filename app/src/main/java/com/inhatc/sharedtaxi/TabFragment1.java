@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 
@@ -27,6 +28,7 @@ public class TabFragment1 extends Fragment implements View.OnClickListener{
     private Animation fab_open, fab_close;
     private boolean isFabOpen = false;
     public static TabFragment1 mContext;
+    public String room_num;
     DatabaseReference db;
     private ListView mListView;
 
@@ -36,6 +38,7 @@ public class TabFragment1 extends Fragment implements View.OnClickListener{
         View v =inflater.inflate(R.layout.tab_fragment_1, container, false);
         // Inflate the layout for this fragment
         mContext =this;
+        db = FirebaseDatabase.getInstance().getReference();
         fab_open = AnimationUtils.loadAnimation(getActivity(), R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(getActivity(), R.anim.fab_close);
         fab_main = (FloatingActionButton) v.findViewById(R.id.fab_main);
@@ -93,8 +96,8 @@ public class TabFragment1 extends Fragment implements View.OnClickListener{
                         .setPositiveButton( "만들기", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-
-                                Toast.makeText( getActivity(), items[selectedItem[0]], Toast.LENGTH_LONG ).show();
+                                db.child("test").setValue(items[selectedItem[0]]);
+                                //Toast.makeText( getActivity(), items[selectedItem[0]], Toast.LENGTH_LONG ).show();
                             }
                         } ).setNegativeButton( "취소", new DialogInterface.OnClickListener() {
                     @Override
