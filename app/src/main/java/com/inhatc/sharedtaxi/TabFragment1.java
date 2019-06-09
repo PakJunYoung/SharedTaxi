@@ -102,14 +102,8 @@ public class TabFragment1 extends Fragment implements View.OnClickListener{
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         long count = (long) dataSnapshot.getValue();
-                                        db.child("roomId").setValue(++count, new DatabaseReference.CompletionListener() {
-                                            @Override
-                                            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                                                if(databaseError != null){
-                                                    System.out.println("Error: " + databaseError.getMessage());
-                                                }
-                                            }
-                                        });
+                                        db.child("roomId").setValue(++count);
+                                        db.child(items[selectedItem[0]]).child("roomList").child(Long.toString(count)).child("owner").setValue("박준영");
                                     }
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError databaseError) {
