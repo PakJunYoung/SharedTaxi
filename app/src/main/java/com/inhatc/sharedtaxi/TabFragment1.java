@@ -29,6 +29,7 @@ public class TabFragment1 extends Fragment implements View.OnClickListener{
     private boolean isFabOpen = false;
     public static TabFragment1 mContext;
     public String room_num;
+    public int num;
     DatabaseReference db;
     private ListView mListView;
 
@@ -96,13 +97,24 @@ public class TabFragment1 extends Fragment implements View.OnClickListener{
                         .setPositiveButton( "만들기", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                db.child("test").setValue(items[selectedItem[0]]);
-                                //Toast.makeText( getActivity(), items[selectedItem[0]], Toast.LENGTH_LONG ).show();
+                                db.addValueEventListener( new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        room_num=dataSnapshot.child("roomId").getValue().toString();
+                                        //Toast.makeText( getActivity(), room_num , Toast.LENGTH_LONG ).show();
+                                        room_num = Integer.toString(Integer.parseInt(room_num)+1);
+                                        db.child("roomList").child(room_num).child("owner").setValue("박준영");
+                                        db.child("roomId").setValue(room_num);
+                                    }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    }
+                                } );
                             }
                         } ).setNegativeButton( "취소", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText( getActivity(), "취소", Toast.LENGTH_LONG ).show();
+                        Toast.makeText( getActivity(), Integer.toString( num ), Toast.LENGTH_LONG ).show();
                     }
                 } );
                 adialog.create();
@@ -111,6 +123,7 @@ public class TabFragment1 extends Fragment implements View.OnClickListener{
                 break;
         }
     }
+
     private void toggleFab() {
 
         if (isFabOpen) {
