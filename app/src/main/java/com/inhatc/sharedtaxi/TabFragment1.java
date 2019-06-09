@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -28,7 +29,7 @@ public class TabFragment1 extends Fragment implements View.OnClickListener{
     private Animation fab_open, fab_close;
     private boolean isFabOpen = false;
     public static TabFragment1 mContext;
-    public String room_num;
+    public int room_num;
     public int num;
     DatabaseReference db;
     private ListView mListView;
@@ -97,20 +98,28 @@ public class TabFragment1 extends Fragment implements View.OnClickListener{
                         .setPositiveButton( "만들기", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                db.addValueEventListener( new ValueEventListener() {
+                                db.child("roomId").addListenerForSingleValueEvent( new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        room_num=dataSnapshot.child("roomId").getValue().toString();
-                                        //Toast.makeText( getActivity(), room_num , Toast.LENGTH_LONG ).show();
-                                        room_num = Integer.toString(Integer.parseInt(room_num)+1);
-                                        db.child("roomList").child(room_num).child("owner").setValue("박준영");
-                                        db.child("roomId").setValue(room_num);
+                                        long count = (long) dataSnapshot.getValue();
+                                        db.child("roomId").setValue(++count, new DatabaseReference.CompletionListener() {
+                                            @Override
+                                            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                                                if(databaseError != null){
+                                                    System.out.println("Error: " + databaseError.getMessage());
+                                                }
+                                            }
+                                        });
                                     }
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError databaseError) {
+                                        throw databaseError.toException();
                                     }
                                 } );
                             }
+
+
+
                         } ).setNegativeButton( "취소", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
