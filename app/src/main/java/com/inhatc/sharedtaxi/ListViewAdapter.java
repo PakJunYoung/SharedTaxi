@@ -47,6 +47,8 @@ public class ListViewAdapter extends BaseAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
+        DatabaseReference db;
+        db=FirebaseDatabase.getInstance().getReference();
         final Context context = parent.getContext();
         mContext=this;
 
@@ -55,12 +57,22 @@ public class ListViewAdapter extends BaseAdapter{
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.activity_listview_item, parent, false);
         }
-
+        final TextView NumName =(TextView) convertView.findViewById(R.id.tv_NumName);
+        TextView people = (TextView) convertView.findViewById(R.id.tv_people);
         /* 'listview_custom'에 정의된 위젯에 대한 참조 획득 */
 
 
         /* 각 리스트에 뿌려줄 아이템을 받아오는데 mMyItem 재활용 */
         final listview_item myItem = getItem(position);
+        db.child(myItem.getWhere()).child("roomList").child(myItem.getRoom_num()).child("owner").addListenerForSingleValueEvent( new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                NumName.setText("("+myItem.getRoom_num()+")"+ dataSnapshot.getValue().toString());
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        } );
 
         
         /* 각 위젯에 세팅된 아이템을 뿌려준다 */
@@ -72,15 +84,13 @@ public class ListViewAdapter extends BaseAdapter{
     }
 
     /* 아이템 데이터 추가를 위한 함수. 자신이 원하는대로 작성 */
-    public void addItem(String uri, String name,String id) {
+    public void roomList(String num,String where){
 
         listview_item mItem = new listview_item();
 
         /* MyItem에 아이템을 setting한다. */
-        mItem.setBirth(uri);
-        mItem.setName(name);
-        mItem.setid(id);
-
+        mItem.setRoom_num(num);
+        mItem.setWhere(where);
         /* mItems에 MyItem을 추가한다. */
         mItems.add(mItem);
 
