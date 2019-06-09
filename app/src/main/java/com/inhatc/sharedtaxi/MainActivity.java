@@ -1,5 +1,6 @@
 package com.inhatc.sharedtaxi;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -11,12 +12,14 @@ import android.view.animation.Animation;
 public class MainActivity extends AppCompatActivity {
     private Context mContext;
     private ViewPager viewPager;
+    private String user_name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mContext = getApplicationContext();
-
+        Intent intent=getIntent();
+        user_name = intent.getStringExtra("user");
 
         //TabLayout
         TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
