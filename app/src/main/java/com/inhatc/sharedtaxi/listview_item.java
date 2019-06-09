@@ -3,8 +3,8 @@ package com.inhatc.sharedtaxi;
 import android.graphics.drawable.Drawable;
 public class listview_item {
 
-    private String name;
-    private String birth;
+    private String room_num;//name
+    private String where;//birth
     private String gender;
     private String type;
     private String id;
@@ -12,20 +12,20 @@ public class listview_item {
     private String title;
     private String time;
 
-    public String getName() {
-        return name;
+    public String getRoom_num() {
+        return room_num;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setRoom_num(String room_num) {
+        this.room_num = room_num;
     }
 
-    public String getBirth() {
-        return birth;
+    public String getWhere() {
+        return where;
     }
 
-    public void setBirth(String birth) {
-        this.birth = birth;
+    public void setWhere(String where) {
+        this.where = where;
     }
 
     public String getGender(){return gender;}

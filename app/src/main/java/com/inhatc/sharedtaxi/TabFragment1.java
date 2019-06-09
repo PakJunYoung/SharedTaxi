@@ -22,6 +22,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Iterator;
+
 
 public class TabFragment1 extends Fragment implements View.OnClickListener{
 
@@ -29,7 +31,6 @@ public class TabFragment1 extends Fragment implements View.OnClickListener{
     private Animation fab_open, fab_close;
     private boolean isFabOpen = false;
     public static TabFragment1 mContext;
-    public int room_num;
     public int num;
     DatabaseReference db;
     private ListView mListView;
@@ -50,6 +51,7 @@ public class TabFragment1 extends Fragment implements View.OnClickListener{
 
         mListView =(ListView) v.findViewById(R.id.lstv);
 
+        datasetting();
         // 방목록   방을 클릭하였을때
         mListView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
             @Override
@@ -64,6 +66,23 @@ public class TabFragment1 extends Fragment implements View.OnClickListener{
         fab_sub3.setOnClickListener(this);
 
         return v;
+    }
+    private void datasetting(){
+        db.child("인하공전 → 주안역").child("roomList").addListenerForSingleValueEvent( new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Iterator<DataSnapshot> child =dataSnapshot.getChildren().iterator();
+                final ListViewAdapter mMyAdapter = new ListViewAdapter();
+                while(child.hasNext()){
+                    String room_num=child.next().getKey();
+                    mMyAdapter.roomList(room_num, "인하공전 → 주안역");
+                }
+                mListView.setAdapter(mMyAdapter);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
     @Override
     public void onClick(View v) {
