@@ -11,7 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -19,7 +19,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.StorageReference;
+
 
 import java.util.ArrayList;
 
@@ -57,35 +57,13 @@ public class ListViewAdapter extends BaseAdapter{
         }
 
         /* 'listview_custom'에 정의된 위젯에 대한 참조 획득 */
-        final ImageView iv_img = (ImageView) convertView.findViewById(R.id.imageView1) ;
-        final ImageView img_gender = (ImageView) convertView.findViewById(R.id.imageView2);
-        ImageView img_birth = (ImageView) convertView.findViewById(R.id.imageView3);
-        final ImageView img_type = (ImageView) convertView.findViewById(R.id.imageView4);
 
-
-        TextView tv_name = (TextView) convertView.findViewById(R.id.pet_name) ;
-        final TextView tv_birth = (TextView) convertView.findViewById(R.id.pet_birth) ;
-        final TextView tv_type=(TextView) convertView.findViewById( R.id.pet_type );
 
         /* 각 리스트에 뿌려줄 아이템을 받아오는데 mMyItem 재활용 */
         final listview_item myItem = getItem(position);
 
-
-        myItem.getUri().getDownloadUrl().addOnSuccessListener( new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Glide.with(pet.mContext).load(uri).into(iv_img);
-            }
-        } );
-        myItem.getUri().getDownloadUrl().addOnFailureListener( new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                iv_img.setImageDrawable( ContextCompat.getDrawable(context, R.drawable.add_image) );
-            }
-        } );
+        
         /* 각 위젯에 세팅된 아이템을 뿌려준다 */
-        tv_name.setText(myItem.getName());
-        img_birth.setImageResource( R.drawable.img_birth );
 
         /* (위젯에 대한 이벤트리스너를 지정하고 싶다면 여기에 작성하면된다..)  */
 
@@ -94,12 +72,12 @@ public class ListViewAdapter extends BaseAdapter{
     }
 
     /* 아이템 데이터 추가를 위한 함수. 자신이 원하는대로 작성 */
-    public void addItem(StorageReference uri, String name,String id) {
+    public void addItem(String uri, String name,String id) {
 
         listview_item mItem = new listview_item();
 
         /* MyItem에 아이템을 setting한다. */
-        mItem.setUri(uri);
+        mItem.setBirth(uri);
         mItem.setName(name);
         mItem.setid(id);
 
