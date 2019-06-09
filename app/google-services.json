@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "321427588677",
+    "firebase_url": "https://sharedtaxi-37ea3.firebaseio.com",
+    "project_id": "sharedtaxi-37ea3",
+    "storage_bucket": "sharedtaxi-37ea3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321427588677:android:be43912cd5451280",
+        "android_client_info": {
+          "package_name": "com.inhatc.sharedtaxi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "321427588677-oaho1ic41ra892uc6n81fntq77cg3nk9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.inhatc.sharedtaxi",
+            "certificate_hash": "6c2aeab386c79aeed4f642342cc30e36da249c89"
+          }
+        },
+        {
+          "client_id": "321427588677-jc80tt809mndan3k53s2t3c2a8bgnfrc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaScXStqqH4pHuHLa8sMivNYqxUbeamSY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "321427588677-jc80tt809mndan3k53s2t3c2a8bgnfrc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
