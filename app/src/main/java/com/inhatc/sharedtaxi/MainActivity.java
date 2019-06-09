@@ -7,7 +7,8 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.animation.Animation;
+import android.widget.Toast;
+
 
 public class MainActivity extends AppCompatActivity {
     private Context mContext;
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
         mContext = getApplicationContext();
         Intent intent=getIntent();
         user_name = intent.getStringExtra("user");
+        Toast.makeText( this, user_name, Toast.LENGTH_SHORT ).show();
 
         //TabLayout
         TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
@@ -48,5 +50,8 @@ public class MainActivity extends AppCompatActivity {
         } );
 
 
+    }
+    public String user_name(){
+        return user_name;
     }
 }

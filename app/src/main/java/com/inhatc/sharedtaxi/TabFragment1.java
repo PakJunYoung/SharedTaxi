@@ -32,6 +32,7 @@ public class TabFragment1 extends Fragment implements View.OnClickListener{
     private boolean isFabOpen = false;
     public static TabFragment1 mContext;
     public int num;
+    public String user_name;
     DatabaseReference db;
     private ListView mListView;
 
@@ -41,6 +42,7 @@ public class TabFragment1 extends Fragment implements View.OnClickListener{
         View v =inflater.inflate(R.layout.tab_fragment_1, container, false);
         // Inflate the layout for this fragment
         mContext =this;
+        user_name = ((MainActivity)getActivity()).user_name();
         db = FirebaseDatabase.getInstance().getReference();
         fab_open = AnimationUtils.loadAnimation(getActivity(), R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(getActivity(), R.anim.fab_close);
@@ -122,7 +124,7 @@ public class TabFragment1 extends Fragment implements View.OnClickListener{
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         long count = (long) dataSnapshot.getValue();
                                         db.child("roomId").setValue(++count);
-                                        db.child(items[selectedItem[0]]).child("roomList").child(Long.toString(count)).child("owner").setValue("박준영");
+                                        db.child(items[selectedItem[0]]).child("roomList").child(Long.toString(count)).child("owner").setValue(user_name);
                                     }
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError databaseError) {

@@ -67,7 +67,7 @@ public class ListViewAdapter extends BaseAdapter{
         db.child(myItem.getWhere()).child("roomList").child(myItem.getRoom_num()).child("owner").addListenerForSingleValueEvent( new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                NumName.setText("("+myItem.getRoom_num()+")"+ dataSnapshot.getValue().toString());
+                NumName.setText("("+myItem.getRoom_num()+") "+ dataSnapshot.getValue().toString());
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
