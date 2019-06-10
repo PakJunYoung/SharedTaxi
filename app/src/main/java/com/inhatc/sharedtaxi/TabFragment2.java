@@ -3,6 +3,8 @@ package com.inhatc.sharedtaxi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,7 +12,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Iterator;
 
 
 public class TabFragment2 extends Fragment implements View.OnClickListener{
@@ -19,13 +31,19 @@ public class TabFragment2 extends Fragment implements View.OnClickListener{
     private Animation fab_open, fab_close;
     private boolean isFabOpen = false;
     public static TabFragment2 mContext;
+    public int num;
+    public String user_name;
+    DatabaseReference db;
+    private ListView mListView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v =inflater.inflate(R.layout.tab_fragment_2, container, false);
         // Inflate the layout for this fragment
         mContext =this;
-
+        user_name = ((MainActivity)getActivity()).user_name();
+        db = FirebaseDatabase.getInstance().getReference();
         fab_open = AnimationUtils.loadAnimation(getActivity(), R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(getActivity(), R.anim.fab_close);
         fab_main = (FloatingActionButton) v.findViewById(R.id.fab_main);
@@ -33,12 +51,40 @@ public class TabFragment2 extends Fragment implements View.OnClickListener{
         fab_sub2 = (FloatingActionButton) v.findViewById(R.id.fab_sub2);
         fab_sub3 = (FloatingActionButton) v.findViewById(R.id.fab_sub3);
 
+        mListView =(ListView) v.findViewById(R.id.lstv);
+
+        datasetting();
+        // 방목록   방을 클릭하였을때
+        mListView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        } );
+
         fab_main.setOnClickListener(this);
         fab_sub1.setOnClickListener(this);
         fab_sub2.setOnClickListener(this);
         fab_sub3.setOnClickListener(this);
 
         return v;
+    }
+    private void datasetting(){
+        db.child("주안역 → 인하공전").child("roomList").addValueEventListener( new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Iterator<DataSnapshot> child =dataSnapshot.getChildren().iterator();
+                final ListViewAdapter mMyAdapter = new ListViewAdapter();
+                while(child.hasNext()){
+                    String room_num=child.next().getKey();
+                    mMyAdapter.roomList(room_num, "주안역 → 인하공전");
+                }
+                mListView.setAdapter(mMyAdapter);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
     @Override
     public void onClick(View v) {
@@ -61,7 +107,7 @@ public class TabFragment2 extends Fragment implements View.OnClickListener{
             case R.id.fab_sub3:
                 toggleFab();
                 AlertDialog.Builder adialog = new AlertDialog.Builder( getActivity() );
-                final String[] items = new String[]{/*"인하공전 → 주안역","주안역 → 인하공전"*/"김치", "감자"};
+                final String[] items = new String[]{"인하공전 → 주안역","주안역 → 인하공전"};
                 final int[] selectedItem = {0};
                 adialog.setTitle( "방만들기" )
                         .setSingleChoiceItems( items, 0, new DialogInterface.OnClickListener() {
@@ -73,12 +119,26 @@ public class TabFragment2 extends Fragment implements View.OnClickListener{
                         .setPositiveButton( "만들기", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText( getActivity(), items[selectedItem[0]], Toast.LENGTH_LONG ).show();
+                                db.child("roomId").addListenerForSingleValueEvent( new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        long count = (long) dataSnapshot.getValue();
+                                        db.child("roomId").setValue(++count);
+                                        db.child(items[selectedItem[0]]).child("roomList").child(Long.toString(count)).child("owner").setValue(user_name);
+                                    }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                        throw databaseError.toException();
+                                    }
+                                } );
                             }
+
+
+
                         } ).setNegativeButton( "취소", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText( getActivity(), "취소", Toast.LENGTH_LONG ).show();
+                        Toast.makeText( getActivity(), Integer.toString( num ), Toast.LENGTH_LONG ).show();
                     }
                 } );
                 adialog.create();
@@ -87,6 +147,7 @@ public class TabFragment2 extends Fragment implements View.OnClickListener{
                 break;
         }
     }
+
     private void toggleFab() {
 
         if (isFabOpen) {
