@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Iterator;
 
 
-public class TabFragment2 extends Fragment implements View.OnClickListener{
+public class TabFragment2 extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private FloatingActionButton fab_main, fab_sub1, fab_sub2,fab_sub3;
     private Animation fab_open, fab_close;
@@ -33,6 +34,7 @@ public class TabFragment2 extends Fragment implements View.OnClickListener{
     public static TabFragment2 mContext;
     public int num;
     public String user_name;
+    public SwipeRefreshLayout mSwipeRefreshLayout;
     DatabaseReference db;
     private ListView mListView;
 
@@ -61,50 +63,31 @@ public class TabFragment2 extends Fragment implements View.OnClickListener{
 
             }
         } );
+        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_layout);
 
-        fab_main.setOnClickListener(this);
-        fab_sub1.setOnClickListener(this);
-        fab_sub2.setOnClickListener(this);
-        fab_sub3.setOnClickListener(this);
+        mSwipeRefreshLayout.setOnRefreshListener(this );
 
-        return v;
-    }
-    private void datasetting(){
-        db.child("주안역 → 인하공전").child("roomList").addValueEventListener( new ValueEventListener() {
+        fab_main.setOnClickListener( new View.OnClickListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Iterator<DataSnapshot> child =dataSnapshot.getChildren().iterator();
-                final ListViewAdapter mMyAdapter = new ListViewAdapter();
-                while(child.hasNext()){
-                    String room_num=child.next().getKey();
-                    mMyAdapter.roomList(room_num, "주안역 → 인하공전");
-                }
-                mListView.setAdapter(mMyAdapter);
+            public void onClick(View v) {
+                toggleFab();
             }
+        } );
+        fab_sub1.setOnClickListener( new View.OnClickListener() {
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onClick(View v) {
+                toggleFab();
             }
-        });
-    }
-    @Override
-    public void onClick(View v) {
-
-        switch (v.getId()) {
-            case R.id.fab_main:
+        } );
+        fab_sub2.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 toggleFab();
-                break;
-
-            case R.id.fab_sub1:
-                toggleFab();
-                Toast.makeText( getActivity(), "Camera Open-!", Toast.LENGTH_SHORT ).show();
-                break;
-
-            case R.id.fab_sub2:
-                toggleFab();
-                Toast.makeText( getActivity(), "Map Open-!", Toast.LENGTH_SHORT ).show();
-                break;
-
-            case R.id.fab_sub3:
+            }
+        } );
+        fab_sub3.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 toggleFab();
                 AlertDialog.Builder adialog = new AlertDialog.Builder( getActivity() );
                 final String[] items = new String[]{"인하공전 → 주안역","주안역 → 인하공전"};
@@ -143,9 +126,35 @@ public class TabFragment2 extends Fragment implements View.OnClickListener{
                 } );
                 adialog.create();
                 adialog.show();
-                Toast.makeText( getActivity(), "Map Open-!", Toast.LENGTH_SHORT ).show();
-                break;
-        }
+            }
+        } );
+
+        return v;
+    }
+    @Override
+    public void onRefresh() {
+        // 새로고침 코드
+        datasetting();
+        // 새로고침 완료
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    private void datasetting(){
+        db.child("인하공전 → 주안역").child("roomList").addListenerForSingleValueEvent( new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Iterator<DataSnapshot> child =dataSnapshot.getChildren().iterator();
+                final ListViewAdapter mMyAdapter = new ListViewAdapter();
+                while(child.hasNext()){
+                    String room_num=child.next().getKey();
+                    mMyAdapter.roomList(room_num, "인하공전 → 주안역");
+                }
+                mListView.setAdapter(mMyAdapter);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
 
     private void toggleFab() {

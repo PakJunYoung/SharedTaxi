@@ -6,10 +6,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".TabFragment1">
 
-    <ListView
-        android:id="@+id/lstv"
+    <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:id="@+id/swipe_layout">
+
+        <ListView
+            android:id="@+id/lstv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_sub1"
