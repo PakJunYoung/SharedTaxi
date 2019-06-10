@@ -54,6 +54,7 @@ public class roomActivity extends AppCompatActivity {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 ChatData chatData = dataSnapshot.getValue(ChatData.class);
                 mAdapter.add(chatData.getUserName() + ": " + chatData.getMessage());
+                lstMessage.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
             }
 
             @Override
