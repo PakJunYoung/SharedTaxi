@@ -4,7 +4,10 @@ public class ChatData {
     private String userName;
     private String message;
 
-    public ChatData() { }
+    public ChatData() {
+        this.userName = "UnknownUser";
+        this.message = "";
+    }
 
     public ChatData(String userName, String message) {
         this.userName = userName;
