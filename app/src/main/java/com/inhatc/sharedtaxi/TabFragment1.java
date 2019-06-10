@@ -2,6 +2,7 @@ package com.inhatc.sharedtaxi;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -53,13 +54,19 @@ public class TabFragment1 extends Fragment implements SwipeRefreshLayout.OnRefre
         fab_sub2 = (FloatingActionButton) v.findViewById(R.id.fab_sub2);
         fab_sub3 = (FloatingActionButton) v.findViewById(R.id.fab_sub3);
         mListView =(ListView) v.findViewById(R.id.lstv);
+        final CustomDialog dialog = new CustomDialog(getActivity());
 
         datasetting();
         // 방목록   방을 클릭하였을때
         mListView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                listview_item roomInfo = (listview_item) parent.getItemAtPosition( position );
+                Intent roomIntent= new Intent(getActivity(),roomActivity.class);
+                roomIntent.putExtra("roomId",roomInfo.getRoom_num());
+                roomIntent.putExtra("where",roomInfo.getWhere());
+                roomIntent.putExtra("userName",user_name);
+                startActivity(roomIntent);
             }
         } );
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_layout);
@@ -76,7 +83,6 @@ public class TabFragment1 extends Fragment implements SwipeRefreshLayout.OnRefre
             @Override
             public void onClick(View v) {
                 toggleFab();
-                CustomDialog dialog = new CustomDialog(getActivity());
                 dialog.show();
             }
         } );
