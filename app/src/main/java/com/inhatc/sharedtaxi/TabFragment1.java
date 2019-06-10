@@ -55,14 +55,13 @@ public class TabFragment1 extends Fragment implements SwipeRefreshLayout.OnRefre
         fab_sub3 = (FloatingActionButton) v.findViewById(R.id.fab_sub3);
         mListView =(ListView) v.findViewById(R.id.lstv);
         final CustomDialog dialog = new CustomDialog(getActivity());
-
+        final Intent roomIntent= new Intent(getActivity(),roomActivity.class);
         datasetting();
         // 방목록   방을 클릭하였을때
         mListView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 listview_item roomInfo = (listview_item) parent.getItemAtPosition( position );
-                Intent roomIntent= new Intent(getActivity(),roomActivity.class);
                 roomIntent.putExtra("roomId",roomInfo.getRoom_num());
                 roomIntent.putExtra("where",roomInfo.getWhere());
                 roomIntent.putExtra("userName",user_name);
@@ -115,6 +114,10 @@ public class TabFragment1 extends Fragment implements SwipeRefreshLayout.OnRefre
                                         long count = (long) dataSnapshot.getValue();
                                         db.child("roomId").setValue(++count);
                                         db.child(items[selectedItem[0]]).child("roomList").child(Long.toString(count)).child("owner").setValue(user_name);
+                                        roomIntent.putExtra("roomId",Long.toString(count));
+                                        roomIntent.putExtra("where",items[selectedItem[0]]);
+                                        roomIntent.putExtra("userName",user_name);
+                                        startActivity(roomIntent);
                                     }
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError databaseError) {
