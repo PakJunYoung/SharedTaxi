@@ -140,14 +140,14 @@ public class TabFragment2 extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     private void datasetting(){
-        db.child("인하공전 → 주안역").child("roomList").addListenerForSingleValueEvent( new ValueEventListener() {
+        db.child("주안역 → 인하공전").child("roomList").addListenerForSingleValueEvent( new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Iterator<DataSnapshot> child =dataSnapshot.getChildren().iterator();
                 final ListViewAdapter mMyAdapter = new ListViewAdapter();
                 while(child.hasNext()){
                     String room_num=child.next().getKey();
-                    mMyAdapter.roomList(room_num, "인하공전 → 주안역");
+                    mMyAdapter.roomList(room_num, "주안역 → 인하공전");
                 }
                 mListView.setAdapter(mMyAdapter);
             }
