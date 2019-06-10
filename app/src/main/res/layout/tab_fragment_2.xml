@@ -45,7 +45,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="80dp"
         android:backgroundTint="#ffffff"
-        android:src="@drawable/ic_test"
+        android:src="@drawable/ic_plus_button"
         android:visibility="invisible"
         app:borderWidth="0dp"
         app:fabSize="normal" />
