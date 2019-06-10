@@ -47,6 +47,8 @@ public class roomActivity extends AppCompatActivity {
         lstMessage.setAdapter(mAdapter);
         Toast.makeText( this,roomId+"/"+where+"/"+userName, Toast.LENGTH_LONG ).show();
 
+        databaseReference.child(where).child("roomList").child(roomId).child("member").child(userName).setValue("true");
+
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,5 +86,12 @@ public class roomActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        databaseReference.child(where).child("roomList").child(roomId).child("member").child(userName).removeValue();
+
     }
 }
