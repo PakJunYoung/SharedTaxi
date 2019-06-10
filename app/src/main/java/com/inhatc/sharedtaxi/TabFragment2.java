@@ -2,9 +2,9 @@ package com.inhatc.sharedtaxi;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -15,6 +15,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -41,7 +42,7 @@ public class TabFragment2 extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v =inflater.inflate(R.layout.tab_fragment_2, container, false);
+        View v =inflater.inflate(R.layout.tab_fragment_1, container, false);
         // Inflate the layout for this fragment
         mContext =this;
         user_name = ((MainActivity)getActivity()).user_name();
@@ -52,15 +53,19 @@ public class TabFragment2 extends Fragment implements SwipeRefreshLayout.OnRefre
         fab_sub1 = (FloatingActionButton) v.findViewById(R.id.fab_sub1);
         fab_sub2 = (FloatingActionButton) v.findViewById(R.id.fab_sub2);
         fab_sub3 = (FloatingActionButton) v.findViewById(R.id.fab_sub3);
-
         mListView =(ListView) v.findViewById(R.id.lstv);
-
+        final CustomDialog dialog = new CustomDialog(getActivity());
+        final Intent roomIntent= new Intent(getActivity(),roomActivity.class);
         datasetting();
         // 방목록   방을 클릭하였을때
         mListView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                listview_item roomInfo = (listview_item) parent.getItemAtPosition( position );
+                roomIntent.putExtra("roomId",roomInfo.getRoom_num());
+                roomIntent.putExtra("where",roomInfo.getWhere());
+                roomIntent.putExtra("userName",user_name);
+                startActivity(roomIntent);
             }
         } );
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_layout);
@@ -77,6 +82,7 @@ public class TabFragment2 extends Fragment implements SwipeRefreshLayout.OnRefre
             @Override
             public void onClick(View v) {
                 toggleFab();
+                dialog.show();
             }
         } );
         fab_sub2.setOnClickListener( new View.OnClickListener() {
@@ -108,6 +114,10 @@ public class TabFragment2 extends Fragment implements SwipeRefreshLayout.OnRefre
                                         long count = (long) dataSnapshot.getValue();
                                         db.child("roomId").setValue(++count);
                                         db.child(items[selectedItem[0]]).child("roomList").child(Long.toString(count)).child("owner").setValue(user_name);
+                                        roomIntent.putExtra("roomId",Long.toString(count));
+                                        roomIntent.putExtra("where",items[selectedItem[0]]);
+                                        roomIntent.putExtra("userName",user_name);
+                                        startActivity(roomIntent);
                                     }
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -157,6 +167,7 @@ public class TabFragment2 extends Fragment implements SwipeRefreshLayout.OnRefre
         });
     }
 
+
     private void toggleFab() {
 
         if (isFabOpen) {
@@ -166,6 +177,7 @@ public class TabFragment2 extends Fragment implements SwipeRefreshLayout.OnRefre
             fab_sub1.setClickable(false);
             fab_sub2.setClickable(false);
             fab_sub3.setClickable(false);
+
             isFabOpen = false;
         } else {
             fab_sub1.startAnimation(fab_open);
@@ -174,6 +186,7 @@ public class TabFragment2 extends Fragment implements SwipeRefreshLayout.OnRefre
             fab_sub1.setClickable(true);
             fab_sub2.setClickable(true);
             fab_sub3.setClickable(true);
+
             isFabOpen = true;
 
         }

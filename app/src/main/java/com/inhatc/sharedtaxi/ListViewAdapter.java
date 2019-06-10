@@ -22,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class ListViewAdapter extends BaseAdapter{
 
@@ -58,7 +59,7 @@ public class ListViewAdapter extends BaseAdapter{
             convertView = inflater.inflate(R.layout.activity_listview_item, parent, false);
         }
         final TextView NumName =(TextView) convertView.findViewById(R.id.tv_NumName);
-        TextView people = (TextView) convertView.findViewById(R.id.tv_people);
+        final TextView people = (TextView) convertView.findViewById(R.id.tv_people);
         /* 'listview_custom'에 정의된 위젯에 대한 참조 획득 */
 
 
@@ -73,6 +74,20 @@ public class ListViewAdapter extends BaseAdapter{
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         } );
+        db.child(myItem.getWhere()).child("roomList").child(myItem.getRoom_num()).child("member").addListenerForSingleValueEvent( new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Iterator<DataSnapshot> child =dataSnapshot.getChildren().iterator();
+                int cnt =0;
+                while(child.hasNext()){
+                    cnt++;
+                }
+                people.setText("인원 수 : "+cnt+"/4");
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
 
         
         /* 각 위젯에 세팅된 아이템을 뿌려준다 */
