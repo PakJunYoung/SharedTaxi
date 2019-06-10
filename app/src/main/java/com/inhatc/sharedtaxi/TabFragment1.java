@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -15,6 +14,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -52,7 +52,6 @@ public class TabFragment1 extends Fragment implements SwipeRefreshLayout.OnRefre
         fab_sub1 = (FloatingActionButton) v.findViewById(R.id.fab_sub1);
         fab_sub2 = (FloatingActionButton) v.findViewById(R.id.fab_sub2);
         fab_sub3 = (FloatingActionButton) v.findViewById(R.id.fab_sub3);
-
         mListView =(ListView) v.findViewById(R.id.lstv);
 
         datasetting();
@@ -77,6 +76,8 @@ public class TabFragment1 extends Fragment implements SwipeRefreshLayout.OnRefre
             @Override
             public void onClick(View v) {
                 toggleFab();
+                CustomDialog dialog = new CustomDialog(getActivity());
+                dialog.show();
             }
         } );
         fab_sub2.setOnClickListener( new View.OnClickListener() {
@@ -167,6 +168,7 @@ public class TabFragment1 extends Fragment implements SwipeRefreshLayout.OnRefre
             fab_sub1.setClickable(false);
             fab_sub2.setClickable(false);
             fab_sub3.setClickable(false);
+
             isFabOpen = false;
         } else {
             fab_sub1.startAnimation(fab_open);
@@ -175,6 +177,7 @@ public class TabFragment1 extends Fragment implements SwipeRefreshLayout.OnRefre
             fab_sub1.setClickable(true);
             fab_sub2.setClickable(true);
             fab_sub3.setClickable(true);
+
             isFabOpen = true;
 
         }
