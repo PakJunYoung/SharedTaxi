@@ -56,8 +56,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:backgroundTint="#009688"
-        android:src="@drawable/ic_test"
+        android:backgroundTint="#EFB450"
+        android:src="@drawable/ic_menu_button"
         app:borderWidth="0dp"
         app:fabSize="normal" />
 </FrameLayout>
