@@ -80,9 +80,10 @@ public class ListViewAdapter extends BaseAdapter{
                 Iterator<DataSnapshot> child =dataSnapshot.getChildren().iterator();
                 int cnt =0;
                 while(child.hasNext()){
+                    child.next();
                     cnt++;
                 }
-                people.setText("인원 수 : "+cnt+"/4");
+                people.setText("인원 수 : " + cnt + "/4");
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

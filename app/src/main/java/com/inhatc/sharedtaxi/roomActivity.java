@@ -92,6 +92,5 @@ public class roomActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         databaseReference.child(where).child("roomList").child(roomId).child("member").child(userName).removeValue();
-
     }
 }
