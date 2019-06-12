@@ -61,11 +61,38 @@ public class TabFragment1 extends Fragment implements SwipeRefreshLayout.OnRefre
         mListView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                listview_item roomInfo = (listview_item) parent.getItemAtPosition( position );
-                roomIntent.putExtra("roomId",roomInfo.getRoom_num());
-                roomIntent.putExtra("where",roomInfo.getWhere());
-                roomIntent.putExtra("userName",user_name);
-                startActivity(roomIntent);
+                final listview_item roomInfo = (listview_item) parent.getItemAtPosition( position );
+                db.child(roomInfo.getWhere()).child("roomList").child(roomInfo.getRoom_num()).child("member").addListenerForSingleValueEvent( new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        Iterator<DataSnapshot> child =dataSnapshot.getChildren().iterator();
+                        int cnt =0;
+                        while(child.hasNext()){
+                            child.next();
+                            cnt++;
+                        }
+                        if(cnt ==4){
+                            android.support.v7.app.AlertDialog.Builder dialog = new android.support.v7.app.AlertDialog.Builder(getActivity());
+                            dialog.setTitle("알림!");
+                            dialog.setMessage("인원이 꽉찼습니다.");
+                            dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            });
+                            dialog.show();
+                        }else{
+                            roomIntent.putExtra("roomId",roomInfo.getRoom_num());
+                            roomIntent.putExtra("where",roomInfo.getWhere());
+                            roomIntent.putExtra("userName",user_name);
+                            startActivity(roomIntent);
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    }
+                });
+
             }
         } );
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_layout);

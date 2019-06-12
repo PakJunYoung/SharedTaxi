@@ -17,7 +17,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.Iterator;
 import java.util.Random;
 
 public class roomActivity extends AppCompatActivity {
@@ -92,5 +94,22 @@ public class roomActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         databaseReference.child(where).child("roomList").child(roomId).child("member").child(userName).removeValue();
+        databaseReference.child(where).child("roomList").child(roomId).child("member").addListenerForSingleValueEvent( new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Iterator<DataSnapshot> child =dataSnapshot.getChildren().iterator();
+                int cnt =0;
+                while(child.hasNext()){
+                    child.next();
+                    cnt++;
+                }
+                if(cnt ==0){
+                    databaseReference.child(where).child("roomList").child(roomId).removeValue();
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
 }
