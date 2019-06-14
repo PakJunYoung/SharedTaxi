@@ -47,10 +47,10 @@ public class roomActivity extends AppCompatActivity {
         userName = intent.getStringExtra("userName");
         mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1);
         lstMessage.setAdapter(mAdapter);
-        Toast.makeText( this,roomId+"/"+where+"/"+userName, Toast.LENGTH_LONG ).show();
 
         databaseReference.child(where).child("roomList").child(roomId).child("member").child(userName).setValue("true");
-
+        ChatData notice = new ChatData("공지", userName + "님이 입장하셨습니다.");
+        databaseReference.child(where).child("roomList").child(roomId).child("message").push().setValue(notice);
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,7 +64,12 @@ public class roomActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 ChatData chatData = dataSnapshot.getValue(ChatData.class);
-                mAdapter.add(chatData.getUserName() + ": " + chatData.getMessage());
+                if(chatData.getUserName().equals("공지")){
+                    mAdapter.add("※ " + chatData.getMessage());
+                }
+                else {
+                    mAdapter.add(chatData.getUserName() + ": " + chatData.getMessage());
+                }
                 lstMessage.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
             }
 
@@ -98,13 +103,16 @@ public class roomActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Iterator<DataSnapshot> child =dataSnapshot.getChildren().iterator();
-                int cnt =0;
+                int cnt = 0;
                 while(child.hasNext()){
                     child.next();
                     cnt++;
                 }
-                if(cnt ==0){
+                if(cnt == 0){
                     databaseReference.child(where).child("roomList").child(roomId).removeValue();
+                }else{
+                    ChatData notice = new ChatData("공지", userName + "님이 나가셨습니다.");
+                    databaseReference.child(where).child("roomList").child(roomId).child("message").push().setValue(notice);
                 }
             }
             @Override
