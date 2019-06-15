@@ -12,7 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -22,7 +21,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Iterator;
-import java.util.Random;
 
 public class roomActivity extends AppCompatActivity {
     ListView lstMessage;
@@ -39,9 +37,13 @@ public class roomActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_room );
+
+
+        // 입장한 방의 정보를 받아오는 인텐트
         Intent intent = getIntent();
         roomId = intent.getStringExtra("roomId");
         where = intent.getStringExtra("where");
+
         lstMessage = (ListView) findViewById(R.id.lstMessage);
         txtMessage = (EditText) findViewById(R.id.txtMessage);
         btnSend = (Button) findViewById(R.id.btnSend);
@@ -50,9 +52,12 @@ public class roomActivity extends AppCompatActivity {
         mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1);
         lstMessage.setAdapter(mAdapter);
 
+        // 방에 입장했다는 정보를 데이터베이스에 삽입
         databaseReference.child(where).child("roomList").child(roomId).child("member").child(userName).setValue("true");
         ChatData notice = new ChatData("공지", userName + "님이 입장하셨습니다.");
         databaseReference.child(where).child("roomList").child(roomId).child("message").push().setValue(notice);
+
+        // 메세지 보내기 버튼
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,6 +67,7 @@ public class roomActivity extends AppCompatActivity {
             }
         });
 
+        // 메세지를 리스트에 뿌려줌
         databaseReference.child(where).child("roomList").child(roomId).child("message").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -105,9 +111,12 @@ public class roomActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        PeopleDialog peopleDialog = new PeopleDialog(this, roomId, where);
+
         int id = item.getItemId();
         if(id == R.id.action_people){
-            // TODO
+
+            peopleDialog.show();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -137,4 +146,5 @@ public class roomActivity extends AppCompatActivity {
             }
         });
     }
+
 }
