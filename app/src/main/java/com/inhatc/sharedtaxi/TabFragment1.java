@@ -38,7 +38,7 @@ import java.util.Iterator;
 
 public class TabFragment1 extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    private FloatingActionButton fab_main, fab_sub1, fab_sub2,fab_sub3;
+    private FloatingActionButton fab_main, fab_sub1, fab_sub2;
     private Animation fab_open, fab_close;
     private boolean isFabOpen = false;
     public static TabFragment1 mContext;
@@ -61,7 +61,6 @@ public class TabFragment1 extends Fragment implements SwipeRefreshLayout.OnRefre
         fab_main = (FloatingActionButton) v.findViewById(R.id.fab_main);
         fab_sub1 = (FloatingActionButton) v.findViewById(R.id.fab_sub1);
         fab_sub2 = (FloatingActionButton) v.findViewById(R.id.fab_sub2);
-        fab_sub3 = (FloatingActionButton) v.findViewById(R.id.fab_sub3);
         mListView =(ListView) v.findViewById(R.id.lstv);
 
 
@@ -175,12 +174,6 @@ public class TabFragment1 extends Fragment implements SwipeRefreshLayout.OnRefre
             @Override
             public void onClick(View v) {
                 toggleFab();
-            }
-        } );
-        fab_sub3.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggleFab();
                 AlertDialog.Builder adialog = new AlertDialog.Builder( getActivity() );
                 final String[] items = new String[]{"인하공전 → 주안역","주안역 → 인하공전"};
                 final int[] selectedItem = {0};
@@ -225,6 +218,7 @@ public class TabFragment1 extends Fragment implements SwipeRefreshLayout.OnRefre
             }
         } );
 
+
         return v;
     }
     @Override
@@ -259,19 +253,15 @@ public class TabFragment1 extends Fragment implements SwipeRefreshLayout.OnRefre
         if (isFabOpen) {
             fab_sub1.startAnimation(fab_close);
             fab_sub2.startAnimation(fab_close);
-            fab_sub3.startAnimation(fab_close);
             fab_sub1.setClickable(false);
             fab_sub2.setClickable(false);
-            fab_sub3.setClickable(false);
 
             isFabOpen = false;
         } else {
             fab_sub1.startAnimation(fab_open);
             fab_sub2.startAnimation(fab_open);
-            fab_sub3.startAnimation(fab_open);
             fab_sub1.setClickable(true);
             fab_sub2.setClickable(true);
-            fab_sub3.setClickable(true);
 
             isFabOpen = true;
 
