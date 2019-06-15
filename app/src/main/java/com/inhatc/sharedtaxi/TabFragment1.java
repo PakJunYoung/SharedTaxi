@@ -11,13 +11,22 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -54,7 +63,9 @@ public class TabFragment1 extends Fragment implements SwipeRefreshLayout.OnRefre
         fab_sub2 = (FloatingActionButton) v.findViewById(R.id.fab_sub2);
         fab_sub3 = (FloatingActionButton) v.findViewById(R.id.fab_sub3);
         mListView =(ListView) v.findViewById(R.id.lstv);
-        final CustomDialog dialog = new CustomDialog(getActivity());
+
+
+
         final Intent roomIntent= new Intent(getActivity(),roomActivity.class);
         datasetting();
         // 방목록   방을 클릭하였을때
@@ -109,6 +120,54 @@ public class TabFragment1 extends Fragment implements SwipeRefreshLayout.OnRefre
             @Override
             public void onClick(View v) {
                 toggleFab();
+                CustomDialog dialog = new CustomDialog(getActivity());
+                dialog.setTitle("탑승지");
+                dialog.getWindow().setFlags( WindowManager.LayoutParams.FLAG_BLUR_BEHIND,WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
+                dialog.setContentView(R.layout.activity_itc_map);
+                final RadioGroup rg = (RadioGroup)dialog.findViewById(R.id.radioGroup);
+                final RadioButton rbt1 = (RadioButton)dialog.findViewById(R.id.radioButton1);
+                final RadioButton rbt2 = (RadioButton)dialog.findViewById(R.id.radioButton2);
+                MapView mMapView = (MapView)dialog.findViewById(R.id.map);
+                MapsInitializer.initialize(getActivity());
+                mMapView.onCreate(dialog.onSaveInstanceState());
+                mMapView.onResume();
+                mMapView.getMapAsync( new OnMapReadyCallback() {
+                    @Override
+                    public void onMapReady(final GoogleMap googleMap) {
+                        double latitude = 37.464660;
+                        double longitude = 126.680085;
+                        LatLng objLocation;
+                        objLocation = new LatLng(latitude,longitude);
+                        // Add a marker in Sydney and move the camera
+                        googleMap.addMarker(new MarkerOptions().position(objLocation).title("주안역 탑승지"));
+                        googleMap.moveCamera( CameraUpdateFactory.newLatLng(objLocation));
+                        googleMap.moveCamera(CameraUpdateFactory.zoomTo(16));
+                        rg.setOnCheckedChangeListener( new RadioGroup.OnCheckedChangeListener() {
+                            @Override
+                            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                                if(checkedId == R.id.radioButton1){
+                                    double latitude = 37.464660;
+                                    double longitude = 126.680085;
+                                    LatLng objLocation;
+                                    objLocation = new LatLng(latitude,longitude);
+                                    // Add a marker in Sydney and move the camera
+                                    googleMap.addMarker(new MarkerOptions().position(objLocation).title("주안역 탑승지"));
+                                    googleMap.moveCamera( CameraUpdateFactory.newLatLng(objLocation));
+                                    googleMap.moveCamera(CameraUpdateFactory.zoomTo(16));
+                                }else{
+                                    double latitude = 37.450750;
+                                    double longitude = 126.657846;
+                                    LatLng objLocation;
+                                    objLocation = new LatLng(latitude,longitude);
+                                    // Add a marker in Sydney and move the camera
+                                    googleMap.addMarker(new MarkerOptions().position(objLocation).title("인하공전 탑승지"));
+                                    googleMap.moveCamera( CameraUpdateFactory.newLatLng(objLocation));
+                                    googleMap.moveCamera(CameraUpdateFactory.zoomTo(16));
+                                }
+                            }
+                        } );
+                    }
+                } );
                 dialog.show();
             }
         } );
