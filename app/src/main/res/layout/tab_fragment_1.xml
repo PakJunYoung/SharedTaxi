@@ -17,21 +17,9 @@
             android:layout_height="match_parent" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_sub1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="188dp"
-        android:backgroundTint="#ffffff"
-        android:src="@drawable/ic_test"
-        android:visibility="invisible"
-        app:borderWidth="0dp"
-        app:fabSize="normal" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_sub2"
+        android:id="@+id/fab_sub1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
@@ -44,7 +32,7 @@
         app:fabSize="normal" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_sub3"
+        android:id="@+id/fab_sub2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
