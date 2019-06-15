@@ -25,6 +25,7 @@ public class PeopleDialog extends Dialog {
     public TextView lblPerson3;
     public TextView lblPerson4;
 
+
     public PeopleDialog( Context context,String roomId, String where) {
         super( context );
         this.roomId = roomId;
